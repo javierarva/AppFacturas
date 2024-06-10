@@ -26,8 +26,8 @@ CREATE TABLE Producto (
     Stock INT NOT NULL
 );
 
--- Tabla Provincias
-CREATE TABLE Provincias (
+-- Tabla Provincia
+CREATE TABLE Provincia (
     ProvinciaID INT AUTO_INCREMENT PRIMARY KEY,
     Nombre VARCHAR(255) NOT NULL
 );
@@ -50,8 +50,8 @@ CREATE TABLE DireccionEnvio (
     FOREIGN KEY (CodigoPostalID) REFERENCES CodigoPostal(CodigoPostalID)
 );
 
--- Tabla Bancos
-CREATE TABLE Bancos (
+-- Tabla Banco
+CREATE TABLE Banco (
     BancoID INT AUTO_INCREMENT PRIMARY KEY,
     Nombre VARCHAR(255) NOT NULL,
     NumeroCuenta VARCHAR(20) NOT NULL,
@@ -60,7 +60,7 @@ CREATE TABLE Bancos (
 
 -- Tabla Cabecera (Factura)
 CREATE TABLE Cabecera (
-    FacturaID INT AUTO_INCREMENT PRIMARY KEY,
+    CabeceraID INT AUTO_INCREMENT PRIMARY KEY,
     Fecha DATE NOT NULL,
     EmpresaID INT,
     ClienteID INT,
@@ -74,7 +74,7 @@ CREATE TABLE Cabecera (
 );
 
 -- Tabla Lineas (Detalle de Factura)
-CREATE TABLE Lineas (
+CREATE TABLE Linea (
     LineaID INT AUTO_INCREMENT PRIMARY KEY,
     FacturaID INT,
     ProductoID INT,
@@ -112,7 +112,7 @@ INSERT INTO Producto (Nombre, Descripcion, Precio, Stock) VALUES
 ('Producto 5', 'Descripción del Producto 5', 50.00, 500);
 
 -- Insertar registros en la tabla Provincias
-INSERT INTO Provincias (Nombre) VALUES
+INSERT INTO Provincia (Nombre) VALUES
 ('Provincia A'),
 ('Provincia B'),
 ('Provincia C'),
@@ -136,7 +136,7 @@ INSERT INTO DireccionEnvio (Calle, Numero, Ciudad, ProvinciaID, CodigoPostalID) 
 ('Calle 5', '202', 'Ciudad E', 5, 5);
 
 -- Insertar registros en la tabla Bancos
-INSERT INTO Bancos (Nombre, NumeroCuenta, Sucursal) VALUES
+INSERT INTO Banco (Nombre, NumeroCuenta, Sucursal) VALUES
 ('Banco A', '1234567890', 'Sucursal A'),
 ('Banco B', '0987654321', 'Sucursal B'),
 ('Banco C', '1122334455', 'Sucursal C'),
@@ -152,7 +152,7 @@ INSERT INTO Cabecera (Fecha, EmpresaID, ClienteID, DireccionEnvioID, BancoID, To
 ('2024-06-14', 5, 5, 5, 5, 500.00);
 
 -- Insertar registros en la tabla Lineas (Detalle de Factura)
-INSERT INTO Lineas (FacturaID, ProductoID, Cantidad, PrecioUnitario, Subtotal) VALUES
+INSERT INTO Linea (FacturaID, ProductoID, Cantidad, PrecioUnitario, Subtotal) VALUES
 (1, 1, 2, 10.00, 20.00),
 (1, 2, 3, 20.00, 60.00),
 (2, 3, 1, 30.00, 30.00),
