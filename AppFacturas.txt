@@ -73,10 +73,10 @@ CREATE TABLE Cabecera (
     FOREIGN KEY (BancoID) REFERENCES Banco(BancoID)
 );
 
--- Tabla  (Detalle de Factura)
+-- Tabla Linea (Detalle de Factura)
 CREATE TABLE Linea (
     LineaID INT AUTO_INCREMENT PRIMARY KEY,
-    FacturaID INT,
+    CabeceraID INT,
     ProductoID INT,
     Cantidad INT NOT NULL,
     PrecioUnitario DOUBLE(10, 2) NOT NULL,
@@ -152,7 +152,7 @@ INSERT INTO Cabecera (Fecha, EmpresaID, ClienteID, DireccionEnvioID, BancoID, To
 ('2024-06-14', 5, 5, 5, 5, 500.00);
 
 -- Insertar registros en la tabla Linea (Detalle de Factura)
-INSERT INTO Linea (FacturaID, ProductoID, Cantidad, PrecioUnitario, Subtotal) VALUES
+INSERT INTO Linea (CabeceraID, ProductoID, Cantidad, PrecioUnitario, Subtotal) VALUES
 (1, 1, 2, 10.00, 20.00),
 (1, 2, 3, 20.00, 60.00),
 (2, 3, 1, 30.00, 30.00),
