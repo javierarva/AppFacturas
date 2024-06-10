@@ -84,3 +84,82 @@ CREATE TABLE Lineas (
     FOREIGN KEY (FacturaID) REFERENCES Cabecera(FacturaID),
     FOREIGN KEY (ProductoID) REFERENCES Producto(ProductoID)
 );
+
+USE Facturacion;
+
+-- Insertar registros en la tabla Empresa
+INSERT INTO Empresa (Nombre, Direccion, Telefono, Email) VALUES
+('Empresa A', 'Calle 1, Ciudad A', '123456789', 'contacto@empresaA.com'),
+('Empresa B', 'Calle 2, Ciudad B', '987654321', 'contacto@empresaB.com'),
+('Empresa C', 'Calle 3, Ciudad C', '456123789', 'contacto@empresaC.com'),
+('Empresa D', 'Calle 4, Ciudad D', '789456123', 'contacto@empresaD.com'),
+('Empresa E', 'Calle 5, Ciudad E', '321654987', 'contacto@empresaE.com');
+
+-- Insertar registros en la tabla Cliente
+INSERT INTO Cliente (Nombre, Apellido, Direccion, Telefono, Email) VALUES
+('Juan', 'Pérez', 'Calle 1, Ciudad A', '123456789', 'juan.perez@correo.com'),
+('María', 'Gómez', 'Calle 2, Ciudad B', '987654321', 'maria.gomez@correo.com'),
+('Carlos', 'López', 'Calle 3, Ciudad C', '456123789', 'carlos.lopez@correo.com'),
+('Ana', 'Martínez', 'Calle 4, Ciudad D', '789456123', 'ana.martinez@correo.com'),
+('Luis', 'Hernández', 'Calle 5, Ciudad E', '321654987', 'luis.hernandez@correo.com');
+
+-- Insertar registros en la tabla Producto
+INSERT INTO Producto (Nombre, Descripcion, Precio, Stock) VALUES
+('Producto 1', 'Descripción del Producto 1', 10.00, 100),
+('Producto 2', 'Descripción del Producto 2', 20.00, 200),
+('Producto 3', 'Descripción del Producto 3', 30.00, 300),
+('Producto 4', 'Descripción del Producto 4', 40.00, 400),
+('Producto 5', 'Descripción del Producto 5', 50.00, 500);
+
+-- Insertar registros en la tabla Provincias
+INSERT INTO Provincias (Nombre) VALUES
+('Provincia A'),
+('Provincia B'),
+('Provincia C'),
+('Provincia D'),
+('Provincia E');
+
+-- Insertar registros en la tabla CodigoPostal
+INSERT INTO CodigoPostal (Codigo) VALUES
+('00001'),
+('00002'),
+('00003'),
+('00004'),
+('00005');
+
+-- Insertar registros en la tabla DireccionEnvio
+INSERT INTO DireccionEnvio (Calle, Numero, Ciudad, ProvinciaID, CodigoPostalID) VALUES
+('Calle 1', '123', 'Ciudad A', 1, 1),
+('Calle 2', '456', 'Ciudad B', 2, 2),
+('Calle 3', '789', 'Ciudad C', 3, 3),
+('Calle 4', '101', 'Ciudad D', 4, 4),
+('Calle 5', '202', 'Ciudad E', 5, 5);
+
+-- Insertar registros en la tabla Bancos
+INSERT INTO Bancos (Nombre, NumeroCuenta, Sucursal) VALUES
+('Banco A', '1234567890', 'Sucursal A'),
+('Banco B', '0987654321', 'Sucursal B'),
+('Banco C', '1122334455', 'Sucursal C'),
+('Banco D', '5566778899', 'Sucursal D'),
+('Banco E', '9988776655', 'Sucursal E');
+
+-- Insertar registros en la tabla Cabecera (Factura)
+INSERT INTO Cabecera (Fecha, EmpresaID, ClienteID, DireccionEnvioID, BancoID, Total) VALUES
+('2024-06-10', 1, 1, 1, 1, 100.00),
+('2024-06-11', 2, 2, 2, 2, 200.00),
+('2024-06-12', 3, 3, 3, 3, 300.00),
+('2024-06-13', 4, 4, 4, 4, 400.00),
+('2024-06-14', 5, 5, 5, 5, 500.00);
+
+-- Insertar registros en la tabla Lineas (Detalle de Factura)
+INSERT INTO Lineas (FacturaID, ProductoID, Cantidad, PrecioUnitario, Subtotal) VALUES
+(1, 1, 2, 10.00, 20.00),
+(1, 2, 3, 20.00, 60.00),
+(2, 3, 1, 30.00, 30.00),
+(2, 4, 4, 40.00, 160.00),
+(3, 5, 5, 50.00, 250.00),
+(3, 1, 2, 10.00, 20.00),
+(4, 2, 3, 20.00, 60.00),
+(4, 3, 1, 30.00, 30.00),
+(5, 4, 4, 40.00, 160.00),
+(5, 5, 5, 50.00, 250.00);
