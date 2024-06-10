@@ -46,7 +46,7 @@ CREATE TABLE DireccionEnvio (
     Ciudad VARCHAR(255),
     ProvinciaID INT,
     CodigoPostalID INT,
-    FOREIGN KEY (ProvinciaID) REFERENCES Provincias(ProvinciaID),
+    FOREIGN KEY (ProvinciaID) REFERENCES Provincia(ProvinciaID),
     FOREIGN KEY (CodigoPostalID) REFERENCES CodigoPostal(CodigoPostalID)
 );
 
@@ -70,7 +70,7 @@ CREATE TABLE Cabecera (
     FOREIGN KEY (EmpresaID) REFERENCES Empresa(EmpresaID),
     FOREIGN KEY (ClienteID) REFERENCES Cliente(ClienteID),
     FOREIGN KEY (DireccionEnvioID) REFERENCES DireccionEnvio(DireccionEnvioID),
-    FOREIGN KEY (BancoID) REFERENCES Bancos(BancoID)
+    FOREIGN KEY (BancoID) REFERENCES Banco(BancoID)
 );
 
 -- Tabla  (Detalle de Factura)
