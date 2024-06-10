@@ -9,7 +9,7 @@ def baja(tabla):
             host="localhost",
             user="root",
             password="",
-            database="factura2.0"
+            database="Facturacion"
         )
         cursor = mybasedatos.cursor()
 
