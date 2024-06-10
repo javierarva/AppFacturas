@@ -1,0 +1,86 @@
+-- Tabla Empresa
+CREATE TABLE Empresa (
+    EmpresaID INT AUTO_INCREMENT PRIMARY KEY,
+    Nombre VARCHAR(255) NOT NULL,
+    Direccion VARCHAR(255),
+    Telefono VARCHAR(20),
+    Email VARCHAR(255)
+);
+
+-- Tabla Cliente
+CREATE TABLE Cliente (
+    ClienteID INT AUTO_INCREMENT PRIMARY KEY,
+    Nombre VARCHAR(255) NOT NULL,
+    Apellido VARCHAR(255),
+    Direccion VARCHAR(255),
+    Telefono VARCHAR(20),
+    Email VARCHAR(255)
+);
+
+-- Tabla Producto
+CREATE TABLE Producto (
+    ProductoID INT AUTO_INCREMENT PRIMARY KEY,
+    Nombre VARCHAR(255) NOT NULL,
+    Descripcion TEXT,
+    Precio DOUBLE(10, 2) NOT NULL,
+    Stock INT NOT NULL
+);
+
+-- Tabla Provincias
+CREATE TABLE Provincias (
+    ProvinciaID INT AUTO_INCREMENT PRIMARY KEY,
+    Nombre VARCHAR(255) NOT NULL
+);
+
+-- Tabla CodigoPostal
+CREATE TABLE CodigoPostal (
+    CodigoPostalID INT AUTO_INCREMENT PRIMARY KEY,
+    Codigo VARCHAR(20) NOT NULL
+);
+
+-- Tabla DireccionEnvio
+CREATE TABLE DireccionEnvio (
+    DireccionEnvioID INT AUTO_INCREMENT PRIMARY KEY,
+    Calle VARCHAR(255) NOT NULL,
+    Numero VARCHAR(10),
+    Ciudad VARCHAR(255),
+    ProvinciaID INT,
+    CodigoPostalID INT,
+    FOREIGN KEY (ProvinciaID) REFERENCES Provincias(ProvinciaID),
+    FOREIGN KEY (CodigoPostalID) REFERENCES CodigoPostal(CodigoPostalID)
+);
+
+-- Tabla Bancos
+CREATE TABLE Bancos (
+    BancoID INT AUTO_INCREMENT PRIMARY KEY,
+    Nombre VARCHAR(255) NOT NULL,
+    NumeroCuenta VARCHAR(20) NOT NULL,
+    Sucursal VARCHAR(255)
+);
+
+-- Tabla Cabecera (Factura)
+CREATE TABLE Cabecera (
+    FacturaID INT AUTO_INCREMENT PRIMARY KEY,
+    Fecha DATE NOT NULL,
+    EmpresaID INT,
+    ClienteID INT,
+    DireccionEnvioID INT,
+    BancoID INT,
+    Total DOUBLE(10, 2) NOT NULL,
+    FOREIGN KEY (EmpresaID) REFERENCES Empresa(EmpresaID),
+    FOREIGN KEY (ClienteID) REFERENCES Cliente(ClienteID),
+    FOREIGN KEY (DireccionEnvioID) REFERENCES DireccionEnvio(DireccionEnvioID),
+    FOREIGN KEY (BancoID) REFERENCES Bancos(BancoID)
+);
+
+-- Tabla Lineas (Detalle de Factura)
+CREATE TABLE Lineas (
+    LineaID INT AUTO_INCREMENT PRIMARY KEY,
+    FacturaID INT,
+    ProductoID INT,
+    Cantidad INT NOT NULL,
+    PrecioUnitario DOUBLE(10, 2) NOT NULL,
+    Subtotal DOUBLE(10, 2) NOT NULL,
+    FOREIGN KEY (FacturaID) REFERENCES Cabecera(FacturaID),
+    FOREIGN KEY (ProductoID) REFERENCES Producto(ProductoID)
+);
