@@ -1,7 +1,6 @@
 from db.connection import connector
 from db.queries import *
 from controllers.functions import *
-from controllers.bill import *
 
 def mostrar_tablas(conexion):
     try:
