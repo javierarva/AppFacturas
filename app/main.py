@@ -11,12 +11,17 @@ def mostrar_tablas(conexion):
         for idx, tabla in enumerate(tablas, start=1):
             print(f"{idx}. {tabla[0]}")
 
-        tabla_seleccionada = int(input("\nSelecciona el número de la tabla: "))
-        if 1 <= tabla_seleccionada <= len(tablas):
-            tabla_seleccionada = tablas[tabla_seleccionada - 1][0]
-            submenu_crud(conexion, tabla_seleccionada)
-        else:
-            print("\nNúmero de tabla no válido.")
+        while True:
+            try:
+                tabla_seleccionada = int(input("\nSelecciona el número de la tabla: "))
+                if 1 <= tabla_seleccionada <= len(tablas):
+                    tabla_seleccionada = tablas[tabla_seleccionada - 1][0]
+                    submenu_crud(conexion, tabla_seleccionada)
+                    break
+                else:
+                    print("\nNúmero de tabla no válido. Por favor, ingrese un número válido.")
+            except ValueError:
+                print("\nEntrada no válida. Por favor, ingrese un número.")
 
     except Error as e:
         print(f"Error al obtener las tablas: {e}")
@@ -35,6 +40,15 @@ def datos(conexion):
             break
         else:
             print("\nOpción no válida, por favor elige de nuevo.")
+
+def factura(conexion):
+    print("\nHas seleccionado Factura.")
+
+def impresion(conexion):
+    print("\nHas seleccionado Impresión.")
+
+def listado(conexion):
+        print("\nHas seleccionado Listado.")
 
 def submenu_crud(conexion, tabla):
     conexion = connector()
@@ -75,11 +89,18 @@ def menu():
  
     opciones = {
         "1": datos,
+        "2": factura,
+        "3": impresion,
+        "4": listado,
     }
 
     while True:
         print("\nMenú Principal")
         print("1. Datos")
+        print("2. Factura")
+        print("3. Impresión")
+        print("4. Listado")
+        print("5. Salir")
         
         opcion = input("\nSelecciona una opción: ").strip()
 

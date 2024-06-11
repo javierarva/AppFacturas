@@ -1,21 +1,39 @@
 from mysql.connector import Error
 from tabulate import tabulate
-from controllers.functions import confirmar
+from controllers.functions import confirmar, valor_valido
 
 def crear(conexion, tabla):
     try:
         cursor = conexion.cursor()
         
         cursor.execute(f"SHOW COLUMNS FROM {tabla}")
-        columnas = [columna[0] for columna in cursor.fetchall()]
+        columnas_info = cursor.fetchall()
+
+        columnas = []
+        tipos = []
+
+        for columna_info in columnas_info:
+            columna = columna_info[0]
+            tipo = columna_info[1]
+            extra = columna_info[5]
+
+            if 'auto_increment' not in extra:
+                columnas.append(columna)
+                tipos.append(tipo)
 
         valores = []
-        for columna in columnas:
-            valor = input(f"Ingrese el valor para la columna '{columna}': ").strip()
-            valores.append(valor)
+        for columna, tipo in zip(columnas, tipos):
+            while True:
+                valor = input(f"Ingrese el valor para la columna '{columna}' (tipo {tipo}): ").strip()
+                if valor_valido(valor, tipo):
+                    valores.append(valor)
+                    break
+                else:
+                    print(f"Valor no válido para la columna '{columna}' (tipo {tipo}). Por favor, ingrese un valor válido.")
 
         valores_str = ', '.join(["'" + valor + "'" for valor in valores])
-        consulta = f"INSERT INTO {tabla} ({', '.join(columnas)}) VALUES ({valores_str})"
+        columnas_str = ', '.join(columnas)
+        consulta = f"INSERT INTO {tabla} ({columnas_str}) VALUES ({valores_str})"
         cursor.execute(consulta)
         conexion.commit()
 
@@ -80,11 +98,18 @@ def eliminar(conexion, tabla):
 
         id_registro = input("\nIngrese el ID del registro que desea eliminar: ").strip()
 
-        if confirmar("\n¿Estás seguro de que deseas eliminar este registro? "):
-            cursor.execute(f"DELETE FROM {tabla} WHERE {tabla}ID = %s", (id_registro,))
-            conexion.commit()
-            print("\nRegistro eliminado exitosamente.")
+        cursor.execute(f"SELECT * FROM {tabla} WHERE {tabla}ID = %s", (id_registro,))
+        registro = cursor.fetchone()
+
+        if registro:
+            if confirmar("\n¿Estás seguro de que deseas eliminar este registro? "):
+                cursor.execute(f"DELETE FROM {tabla} WHERE {tabla}ID = %s", (id_registro,))
+                conexion.commit()
+                print("\nRegistro eliminado exitosamente.")
+            else:
+                print("\nEliminación cancelada.")
         else:
-            print("\nEliminación cancelada.")
+            print(f"\nNo se encontró un registro con el ID: {id_registro}")
+
     except Error as e:
         print(f"Error al eliminar el registro: {e}")
