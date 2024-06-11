@@ -1,6 +1,7 @@
 from db.connection import connector
 from db.queries import *
 from controllers.functions import *
+from controllers.invoice import *
 
 def mostrar_tablas(conexion):
     try:
@@ -42,8 +43,35 @@ def datos(conexion):
             print("\nOpción no válida, por favor elige de nuevo.")
 
 def factura(conexion):
-    print("\nHas seleccionado Factura.")
+    conexion = connector()
+    if conexion is None:
+        print("\nNo se pudo establecer conexión con la base de datos.")
+        return
+    
+    cursor = conexion.cursor(dictionary=True)
 
+    id_cliente = int(input("Ingrese el ID del cliente cuya factura desea imprimir: "))
+
+    try:
+        invoice = obtener_factura(cursor, id_cliente)
+        if not invoice:
+            raise ValueError(f"No se encontró ninguna factura para el cliente con ID {id_cliente}")
+
+        client = obtener_cliente(cursor, invoice['ClienteID'])
+        if not client:
+            raise ValueError(f"No se encontró ningún cliente con el ID {invoice['ClienteID']}")
+
+        products = obtener_productos(cursor, invoice['CabeceraID'])
+        details = obtener_detalles_factura(cursor, invoice['CabeceraID'])
+
+        crear_pdf_factura(invoice, client, products, details)
+    except Exception as e:
+        print(f"Error: {e}")
+
+    finally:
+        cursor.close()
+        conexion.close()
+        
 def impresion(conexion):
     print("\nHas seleccionado Impresión.")
 
