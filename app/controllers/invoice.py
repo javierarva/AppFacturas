@@ -45,15 +45,16 @@ def crear_pdf_factura(invoice, client, products, details):
 
     total_factura = 0
     for detail in details:
-        product = next(p for p in products if p['ProductoID'] == detail['ProductoID'])
-        total_producto = detail['Cantidad'] * detail['PrecioUnitario']
-        total_factura += total_producto
+        product = next((p for p in products if p['ProductoID'] == detail['ProductoID']), None)
+        if product:
+            total_producto = detail['Cantidad'] * detail['PrecioUnitario']
+            total_factura += total_producto
 
-        pdf.cell(80, 10, product['Descripcion'], 1)
-        pdf.cell(30, 10, str(detail['Cantidad']), 1)
-        pdf.cell(30, 10, f"{detail['PrecioUnitario']:.2f}", 1)
-        pdf.cell(30, 10, f"{total_producto:.2f}", 1)
-        pdf.ln()
+            pdf.cell(80, 10, product['Descripcion'], 1)
+            pdf.cell(30, 10, str(detail['Cantidad']), 1)
+            pdf.cell(30, 10, f"{detail['PrecioUnitario']:.2f}", 1)
+            pdf.cell(30, 10, f"{total_producto:.2f}", 1)
+            pdf.ln()
 
     pdf.ln(10)
     pdf.set_font('Arial', 'B', 10)
