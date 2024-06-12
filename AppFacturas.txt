@@ -1,3 +1,12 @@
+-- Eliminar la base de datos
+DROP DATABASE Facturacion;
+
+-- Crear la base de datos si no existe
+CREATE DATABASE IF NOT EXISTS Facturacion;
+
+-- Usar la base de datos Facturacion
+USE Facturacion;
+
 -- Tabla Empresa
 CREATE TABLE Empresa (
     EmpresaID INT AUTO_INCREMENT PRIMARY KEY,
