@@ -121,3 +121,17 @@ def eliminar(conexion, tabla):
 
     except Error as e:
         print(f"Error al eliminar el registro: {e}")
+
+def mostrar_listado(conexion):
+    try:
+        cursor = conexion.cursor()
+        cursor.execute(f"SELECT * FROM cabecera")
+        registros = cursor.fetchall()
+        if registros:
+            headers = [i[0] for i in cursor.description]
+            print(f"\nRegistros en la tabla cabecera:")
+            print(tabulate(registros, headers=headers, tablefmt="grid"))
+        else:
+            print(f"\nNo hay registros en la tabla cabecera.")
+    except Error as e:
+        print(f"Error al leer los registros: {e}")

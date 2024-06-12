@@ -51,7 +51,7 @@ def datos(conexion):
             print("\nOpción no válida, por favor elige de nuevo.")
 
 def factura(conexion):
-        print("\nHas seleccionado Factura.")
+    print("\nHas seleccionado Factura.")
         
 def impresion(conexion):
     conexion = connector()
@@ -92,7 +92,12 @@ def impresion(conexion):
         conexion.close()
 
 def listado(conexion):
-        print("\nHas seleccionado Listado.")
+    conexion = connector()
+    if conexion is None:
+        print("\nNo se pudo establecer conexión con la base de datos.")
+        return
+        
+    mostrar_listado(conexion)
 
 def submenu_crud(conexion, tabla):
     conexion = connector()
