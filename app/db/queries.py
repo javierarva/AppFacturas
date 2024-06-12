@@ -24,11 +24,13 @@ def crear(conexion, tabla):
                 tipos.append(tipo)
                 not_nulls.append(is_nullable == "NO")
 
+        print("\nIngrese los valores para cada columna. Escriba 'salir' para volver al menú anterior en cualquier momento.")
+
         valores = []
         for columna, tipo, not_null in zip(columnas, tipos, not_nulls):
             while True:
-                valor = input(f"Ingrese el valor para la columna '{columna}' (tipo {tipo}): ").strip()
-                
+                valor = input(f"\nIngrese el valor para la columna '{columna}' (tipo {tipo}): ").strip()
+
                 if valor.lower() == "salir":
                     print("Regresando al menú anterior...")
                     return
