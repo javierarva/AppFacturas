@@ -22,8 +22,7 @@ CREATE TABLE Producto (
     ProductoID INT AUTO_INCREMENT PRIMARY KEY,
     Nombre VARCHAR(255) NOT NULL,
     Descripcion TEXT,
-    Precio DOUBLE(10, 2) NOT NULL,
-    Stock INT NOT NULL
+    Precio DOUBLE(10, 2) NOT NULL
 );
 
 -- Tabla Provincia
@@ -105,12 +104,12 @@ INSERT INTO Cliente (Nombre, Apellido, Direccion, Telefono, Email) VALUES
 ('Luis', 'Hernández', 'Calle 5, Ciudad E', '321654987', 'luis.hernandez@correo.com');
 
 -- Insertar registros en la tabla Producto
-INSERT INTO Producto (Nombre, Descripcion, Precio, Stock) VALUES
-('Producto 1', 'Descripción del Producto 1', 10.00, 100),
-('Producto 2', 'Descripción del Producto 2', 20.00, 200),
-('Producto 3', 'Descripción del Producto 3', 30.00, 300),
-('Producto 4', 'Descripción del Producto 4', 40.00, 400),
-('Producto 5', 'Descripción del Producto 5', 50.00, 500);
+INSERT INTO Producto (Nombre, Descripcion, Precio) VALUES
+('Producto 1', 'Descripción del Producto 1', 10.00),
+('Producto 2', 'Descripción del Producto 2', 20.00),
+('Producto 3', 'Descripción del Producto 3', 30.00),
+('Producto 4', 'Descripción del Producto 4', 40.00),
+('Producto 5', 'Descripción del Producto 5', 50.00);
 
 -- Insertar registros en la tabla Provincias
 INSERT INTO Provincia (Nombre) VALUES
