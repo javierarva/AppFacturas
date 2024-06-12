@@ -14,3 +14,9 @@ def connector():
     except Error as e:
         print(f"\nError al conectar a la base de datos: {e}")
     return None
+
+def check_connection(conexion):
+    conexion = connector()
+    if conexion is None:
+        print("\nNo se pudo establecer conexión con la base de datos.")
+        return

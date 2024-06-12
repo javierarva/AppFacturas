@@ -28,6 +28,11 @@ def crear(conexion, tabla):
         for columna, tipo, not_null in zip(columnas, tipos, not_nulls):
             while True:
                 valor = input(f"Ingrese el valor para la columna '{columna}' (tipo {tipo}): ").strip()
+                
+                if valor.lower() == "salir":
+                    print("Regresando al menú anterior...")
+                    return
+                
                 if valor_valido(valor, tipo) and (not not_null or valor):
                     valores.append(valor)
                     break

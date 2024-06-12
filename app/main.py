@@ -1,4 +1,4 @@
-from db.connection import connector
+from db.connection import *
 from db.queries import *
 from controllers.functions import *
 from controllers.print import *
@@ -54,10 +54,7 @@ def factura(conexion):
     print("\nHas seleccionado Factura.")
         
 def impresion(conexion):
-    conexion = connector()
-    if conexion is None:
-        print("\nNo se pudo establecer conexión con la base de datos.")
-        return
+    check_connection(conexion)
     
     cursor = conexion.cursor(dictionary=True)
 
@@ -92,18 +89,12 @@ def impresion(conexion):
         conexion.close()
 
 def listado(conexion):
-    conexion = connector()
-    if conexion is None:
-        print("\nNo se pudo establecer conexión con la base de datos.")
-        return
+    check_connection(conexion)
         
     mostrar_listado(conexion)
 
 def submenu_crud(conexion, tabla):
-    conexion = connector()
-    if conexion is None:
-        print("\nNo se pudo establecer conexión con la base de datos.")
-        return
+    check_connection(conexion)
     
     opciones = {
         "1": crear,
@@ -131,10 +122,7 @@ def submenu_crud(conexion, tabla):
             print("\nOpción no válida, por favor elige de nuevo.")
 
 def menu():
-    conexion = connector()
-    if conexion is None:
-        print("\nNo se pudo establecer conexión con la base de datos.")
-        return
+    check_connection(conexion)
  
     opciones = {
         "1": datos,
