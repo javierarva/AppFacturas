@@ -1,9 +1,17 @@
+import os
 from db.connection import *
 from db.queries import *
 from controllers.functions import *
 from controllers.print import *
 
+def clear_terminal():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+def pause():
+    input("\nPresiona Enter para continuar...")
+
 def mostrar_tablas(conexion):
+    clear_terminal()
     try:
         cursor = conexion.cursor()
         cursor.execute("SHOW TABLES")
@@ -37,6 +45,7 @@ def mostrar_tablas(conexion):
 
 def datos(conexion):
     while True:
+        clear_terminal()
         print("\nSubmenú Datos")
         print("1. Mostrar tablas")
         print("2. Volver al menú principal")
@@ -52,9 +61,11 @@ def datos(conexion):
             print("\nOpción no válida, por favor elige de nuevo.")
 
 def factura(conexion):
+    clear_terminal()
     print("\nHas seleccionado Factura.")
         
 def impresion(conexion):
+    clear_terminal()
     check_connection(conexion)
     
     cursor = conexion.cursor(dictionary=True)
@@ -78,9 +89,6 @@ def impresion(conexion):
         if not details:
             raise ValueError("No se encontraron detalles de factura para esta factura")
 
-        products = obtener_productos(cursor, invoice['CabeceraID'])
-        details = obtener_detalles_factura(cursor, invoice['CabeceraID'])
-
         crear_pdf_factura(invoice, client, products, details)
     except Exception as e:
         print(f"Error: {e}")
@@ -90,21 +98,24 @@ def impresion(conexion):
         conexion.close()
 
 def listado(conexion):
-    check_connection(conexion)
-        
-    mostrar_listado(conexion)
-
-def submenu_crud(conexion, tabla):
+    clear_terminal()
     check_connection(conexion)
     
-    opciones = {
-        "1": crear,
-        "2": leer,
-        "3": modificar,
-        "4": eliminar
-    }
+    mostrar_listado(conexion)
+    pause()
 
+def submenu_crud(conexion, tabla):
     while True:
+        clear_terminal()
+        check_connection(conexion)
+        
+        opciones = {
+            "1": crear,
+            "2": leer,
+            "3": modificar,
+            "4": eliminar
+        }
+
         print(f"\nSubmenú CRUD para {tabla}:")
         print("1. Crear registro")
         print("2. Leer registros")
@@ -115,7 +126,12 @@ def submenu_crud(conexion, tabla):
         opcion = input("\nElige una opción: ").strip()
 
         if opcion in opciones:
-            opciones[opcion](conexion, tabla)
+            try:
+                opciones[opcion](conexion, tabla)
+                if opcion == "2":
+                    pause()
+            except Error as e:
+                print(f"Error al ejecutar la operación {opcion} en la tabla {tabla}: {e}")
         elif opcion == "5":
             if confirmar("\n¿Estás seguro de que deseas volver al menú anterior? "):
                 break
@@ -123,16 +139,21 @@ def submenu_crud(conexion, tabla):
             print("\nOpción no válida, por favor elige de nuevo.")
 
 def menu():
-    check_connection(conexion)
- 
-    opciones = {
-        "1": datos,
-        "2": factura,
-        "3": impresion,
-        "4": listado,
-    }
-
     while True:
+        clear_terminal()
+        try:
+            check_connection(conexion)
+        except Error as e:
+            print(f"Error de conexión: {e}")
+            break
+ 
+        opciones = {
+            "1": datos,
+            "2": factura,
+            "3": impresion,
+            "4": listado,
+        }
+
         print("\nMenú Principal")
         print("1. Datos")
         print("2. Factura")
@@ -143,7 +164,10 @@ def menu():
         opcion = input("\nSelecciona una opción: ").strip()
 
         if opcion in opciones:
-            opciones[opcion](conexion)
+            try:
+                opciones[opcion](conexion)
+            except Error as e:
+                print(f"Error al ejecutar la opción {opcion}: {e}")
         elif opcion == "5":
             if confirmar("\n¿Estás seguro de que deseas salir? "):
                 break
