@@ -91,14 +91,20 @@ def modificar(conexion, tabla):
             print(f"\nNo se encontró ningún registro con ID {id_registro}.")
             return
 
-        nuevos_valores = []
+        nuevos_valores = {}
         for columna in columnas[1:]:
-            nuevo_valor = input(f"Ingrese el nuevo valor para la columna '{columna}': ").strip()
-            nuevos_valores.append(nuevo_valor)
+            nuevo_valor = input(f"Ingrese el nuevo valor para la columna '{columna}' (dejar vacío para no modificar): ").strip()
+            if nuevo_valor:
+                nuevos_valores[columna] = nuevo_valor
 
-        sets = ', '.join([f"{columna} = %s" for columna in columnas[1:]])
+        if not nuevos_valores:
+            print("\nNo se han ingresado nuevos valores. El registro no se ha modificado.")
+            return
+
+        sets = ', '.join([f"{columna} = %s" for columna in nuevos_valores.keys()])
+        valores = list(nuevos_valores.values()) + [id_registro]
         consulta = f"UPDATE {tabla} SET {sets} WHERE {tabla}ID = %s"
-        cursor.execute(consulta, nuevos_valores + [id_registro])
+        cursor.execute(consulta, valores)
         conexion.commit()
 
         print("\nRegistro modificado exitosamente.")

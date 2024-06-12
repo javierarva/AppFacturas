@@ -46,7 +46,8 @@ def datos(conexion):
         if opcion == '1':
             mostrar_tablas(conexion)
         elif opcion == '2':
-            break
+            if confirmar("\n¿Estás seguro de que deseas volver al menú anterior? "):
+                break
         else:
             print("\nOpción no válida, por favor elige de nuevo.")
 
