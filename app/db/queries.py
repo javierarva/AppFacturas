@@ -5,33 +5,41 @@ from controllers.functions import confirmar, valor_valido
 def crear(conexion, tabla):
     try:
         cursor = conexion.cursor()
-        
+
         cursor.execute(f"SHOW COLUMNS FROM {tabla}")
         columnas_info = cursor.fetchall()
 
         columnas = []
         tipos = []
+        not_nulls = []
 
         for columna_info in columnas_info:
             columna = columna_info[0]
             tipo = columna_info[1]
             extra = columna_info[5]
+            is_nullable = columna_info[2]
 
             if 'auto_increment' not in extra:
                 columnas.append(columna)
                 tipos.append(tipo)
+                not_nulls.append(is_nullable == "NO")
 
         valores = []
-        for columna, tipo in zip(columnas, tipos):
+        for columna, tipo, not_null in zip(columnas, tipos, not_nulls):
             while True:
                 valor = input(f"Ingrese el valor para la columna '{columna}' (tipo {tipo}): ").strip()
-                if valor_valido(valor, tipo):
+                if valor_valido(valor, tipo) and (not not_null or valor):
                     valores.append(valor)
                     break
                 else:
+                    if not not_null and not valor:
+                        valores.append('NULL')
+                        break
                     print(f"Valor no válido para la columna '{columna}' (tipo {tipo}). Por favor, ingrese un valor válido.")
+                    if not_null:
+                        print(f"Este campo no puede estar vacío.")
 
-        valores_str = ', '.join(["'" + valor + "'" for valor in valores])
+        valores_str = ', '.join(["'" + valor + "'" if valor != 'NULL' else valor for valor in valores])
         columnas_str = ', '.join(columnas)
         consulta = f"INSERT INTO {tabla} ({columnas_str}) VALUES ({valores_str})"
         cursor.execute(consulta)

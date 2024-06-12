@@ -1,22 +1,30 @@
 from db.connection import connector
 from db.queries import *
 from controllers.functions import *
-from controllers.invoice import *
+from controllers.print import *
 
 def mostrar_tablas(conexion):
     try:
         cursor = conexion.cursor()
         cursor.execute("SHOW TABLES")
         tablas = cursor.fetchall()
+
+        tablas_excluidas = {'cabecera', 'linea'}
+        tablas_filtradas = [tabla for tabla in tablas if tabla[0] not in tablas_excluidas]
+
+        if not tablas_filtradas:
+            print("\nNo hay tablas disponibles para mostrar.")
+            return
+
         print("\nTablas en la base de datos:")
-        for idx, tabla in enumerate(tablas, start=1):
+        for idx, tabla in enumerate(tablas_filtradas, start=1):
             print(f"{idx}. {tabla[0]}")
 
         while True:
             try:
                 tabla_seleccionada = int(input("\nSelecciona el número de la tabla: "))
-                if 1 <= tabla_seleccionada <= len(tablas):
-                    tabla_seleccionada = tablas[tabla_seleccionada - 1][0]
+                if 1 <= tabla_seleccionada <= len(tablas_filtradas):
+                    tabla_seleccionada = tablas_filtradas[tabla_seleccionada - 1][0]
                     submenu_crud(conexion, tabla_seleccionada)
                     break
                 else:
@@ -43,6 +51,9 @@ def datos(conexion):
             print("\nOpción no válida, por favor elige de nuevo.")
 
 def factura(conexion):
+        print("\nHas seleccionado Factura.")
+        
+def impresion(conexion):
     conexion = connector()
     if conexion is None:
         print("\nNo se pudo establecer conexión con la base de datos.")
@@ -50,16 +61,24 @@ def factura(conexion):
     
     cursor = conexion.cursor(dictionary=True)
 
-    id_cliente = int(input("Ingrese el ID del cliente cuya factura desea imprimir: "))
+    id_factura = int(input("Ingrese el ID de la factura que desea imprimir: "))
 
     try:
-        invoice = obtener_factura(cursor, id_cliente)
+        invoice = obtener_factura(cursor, id_factura)
         if not invoice:
-            raise ValueError(f"No se encontró ninguna factura para el cliente con ID {id_cliente}")
+            raise ValueError(f"No se encontró ninguna factura con ID {id_factura}")
 
         client = obtener_cliente(cursor, invoice['ClienteID'])
         if not client:
             raise ValueError(f"No se encontró ningún cliente con el ID {invoice['ClienteID']}")
+        
+        products = obtener_productos(cursor, invoice['CabeceraID'])
+        if not products:
+            raise ValueError("No se encontraron productos para esta factura")
+
+        details = obtener_detalles_factura(cursor, invoice['CabeceraID'])
+        if not details:
+            raise ValueError("No se encontraron detalles de factura para esta factura")
 
         products = obtener_productos(cursor, invoice['CabeceraID'])
         details = obtener_detalles_factura(cursor, invoice['CabeceraID'])
@@ -71,9 +90,6 @@ def factura(conexion):
     finally:
         cursor.close()
         conexion.close()
-        
-def impresion(conexion):
-    print("\nHas seleccionado Impresión.")
 
 def listado(conexion):
         print("\nHas seleccionado Listado.")

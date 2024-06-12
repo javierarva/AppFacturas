@@ -67,6 +67,7 @@ CREATE TABLE Cabecera (
     DireccionEnvioID INT,
     BancoID INT,
     Total DOUBLE(10, 2) NOT NULL,
+    IVA DOUBLE(4, 2) NOT NULL,
     FOREIGN KEY (EmpresaID) REFERENCES Empresa(EmpresaID),
     FOREIGN KEY (ClienteID) REFERENCES Cliente(ClienteID),
     FOREIGN KEY (DireccionEnvioID) REFERENCES DireccionEnvio(DireccionEnvioID),
@@ -144,12 +145,12 @@ INSERT INTO Banco (Nombre, NumeroCuenta, Sucursal) VALUES
 ('Banco E', '9988776655', 'Sucursal E');
 
 -- Insertar registros en la tabla Cabecera (Factura)
-INSERT INTO Cabecera (Fecha, EmpresaID, ClienteID, DireccionEnvioID, BancoID, Total) VALUES
-('2024-06-10', 1, 1, 1, 1, 100.00),
-('2024-06-11', 2, 2, 2, 2, 200.00),
-('2024-06-12', 3, 3, 3, 3, 300.00),
-('2024-06-13', 4, 4, 4, 4, 400.00),
-('2024-06-14', 5, 5, 5, 5, 500.00);
+INSERT INTO Cabecera (Fecha, EmpresaID, ClienteID, DireccionEnvioID, BancoID, Total, IVA) VALUES
+('2024-06-10', 1, 1, 1, 1, 100.00, 21.00),
+('2024-06-11', 2, 2, 2, 2, 200.00, 21.00),
+('2024-06-12', 3, 3, 3, 3, 300.00, 21.00),
+('2024-06-13', 4, 4, 4, 4, 400.00, 21.00),
+('2024-06-14', 5, 5, 5, 5, 500.00), 21.00;
 
 -- Insertar registros en la tabla Linea (Detalle de Factura)
 INSERT INTO Linea (CabeceraID, ProductoID, Cantidad, PrecioUnitario, Subtotal) VALUES
