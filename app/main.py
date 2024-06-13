@@ -61,29 +61,8 @@ def datos(conexion):
             print("\nOpción no válida, por favor elige de nuevo.")
 
 def factura(conexion):
-    while True:
-        clear_terminal()
-        check_connection(conexion)
-        
-        print("\nGenerar factura en Cabecera o Línea:")
-        print("1. Cabecera")
-        print("2. Linea")
-        print("3. Salir al menú anterior")
-
-        opcion = input("\nElige una opción: ").strip()
-
-        try:
-            if opcion == "1":
-                crear(conexion, "Cabecera")
-            elif opcion == "2":
-                crear(conexion, "Linea")
-            elif opcion == "3":
-                if confirmar("\n¿Estás seguro de que deseas volver al menú anterior? "):
-                    break
-            else:
-                print("Opción no válida. Por favor, seleccione una opción del menú.")
-        except Error as e:
-            print(f"Error al ejecutar la operación {opcion} en la tabla: {e}")
+    clear_terminal()
+    print("\nHas seleccionado Factura.")
         
 def impresion(conexion):
     clear_terminal()
