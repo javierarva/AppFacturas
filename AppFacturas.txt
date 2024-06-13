@@ -1,5 +1,5 @@
 -- Eliminar la base de datos
-DROP DATABASE Facturacion;
+DROP DATABASE IF EXISTS Facturacion;
 
 -- Crear la base de datos si no existe
 CREATE DATABASE IF NOT EXISTS Facturacion;
@@ -69,6 +69,7 @@ CREATE TABLE Banco (
 -- Tabla Cabecera (Factura)
 CREATE TABLE Cabecera (
     CabeceraID INT AUTO_INCREMENT PRIMARY KEY,
+    NumeroFactura VARCHAR(50) NOT NULL UNIQUE,
     Fecha DATE NOT NULL,
     EmpresaID INT,
     ClienteID INT,
@@ -85,16 +86,14 @@ CREATE TABLE Cabecera (
 -- Tabla Linea (Detalle de Factura)
 CREATE TABLE Linea (
     LineaID INT AUTO_INCREMENT PRIMARY KEY,
-    CabeceraID INT,
+    NumeroFactura VARCHAR(50) NOT NULL,
     ProductoID INT,
     Cantidad INT NOT NULL,
     PrecioUnitario DOUBLE(10, 2) NOT NULL,
     Subtotal DOUBLE(10, 2) NOT NULL,
-    FOREIGN KEY (CabeceraID) REFERENCES Cabecera(CabeceraID),
+    FOREIGN KEY (NumeroFactura) REFERENCES Cabecera(NumeroFactura),
     FOREIGN KEY (ProductoID) REFERENCES Producto(ProductoID)
 );
-
-USE Facturacion;
 
 -- Insertar registros en la tabla Empresa
 INSERT INTO Empresa (Nombre, Direccion, Telefono, Email) VALUES
@@ -120,7 +119,7 @@ INSERT INTO Producto (Nombre, Descripcion, Precio) VALUES
 ('Producto 4', 'Descripción del Producto 4', 40.00),
 ('Producto 5', 'Descripción del Producto 5', 50.00);
 
--- Insertar registros en la tabla Provincias
+-- Insertar registros en la tabla Provincia
 INSERT INTO Provincia (Nombre) VALUES
 ('Provincia A'),
 ('Provincia B'),
@@ -144,7 +143,7 @@ INSERT INTO DireccionEnvio (Calle, Numero, Ciudad, ProvinciaID, CodigoPostalID) 
 ('Calle 4', '101', 'Ciudad D', 4, 4),
 ('Calle 5', '202', 'Ciudad E', 5, 5);
 
--- Insertar registros en la tabla Bancos
+-- Insertar registros en la tabla Banco
 INSERT INTO Banco (Nombre, NumeroCuenta, Sucursal) VALUES
 ('Banco A', '1234567890', 'Sucursal A'),
 ('Banco B', '0987654321', 'Sucursal B'),
@@ -153,22 +152,22 @@ INSERT INTO Banco (Nombre, NumeroCuenta, Sucursal) VALUES
 ('Banco E', '9988776655', 'Sucursal E');
 
 -- Insertar registros en la tabla Cabecera (Factura)
-INSERT INTO Cabecera (Fecha, EmpresaID, ClienteID, DireccionEnvioID, BancoID, Total, IVA) VALUES
-('2024-06-10', 1, 1, 1, 1, 100.00, 21.00),
-('2024-06-11', 2, 2, 2, 2, 200.00, 21.00),
-('2024-06-12', 3, 3, 3, 3, 300.00, 21.00),
-('2024-06-13', 4, 4, 4, 4, 400.00, 21.00),
-('2024-06-14', 5, 5, 5, 5, 500.00, 21.00);
+INSERT INTO Cabecera (NumeroFactura, Fecha, EmpresaID, ClienteID, DireccionEnvioID, BancoID, Total, IVA) VALUES
+('F0001', '2024-06-10', 1, 1, 1, 1, 100.00, 21.00),
+('F0002', '2024-06-11', 2, 2, 2, 2, 200.00, 21.00),
+('F0003', '2024-06-12', 3, 3, 3, 3, 300.00, 21.00),
+('F0004', '2024-06-13', 4, 4, 4, 4, 400.00, 21.00),
+('F0005', '2024-06-14', 5, 5, 5, 5, 500.00, 21.00);
 
 -- Insertar registros en la tabla Linea (Detalle de Factura)
-INSERT INTO Linea (CabeceraID, ProductoID, Cantidad, PrecioUnitario, Subtotal) VALUES
-(1, 1, 2, 10.00, 20.00),
-(1, 2, 3, 20.00, 60.00),
-(2, 3, 1, 30.00, 30.00),
-(2, 4, 4, 40.00, 160.00),
-(3, 5, 5, 50.00, 250.00),
-(3, 1, 2, 10.00, 20.00),
-(4, 2, 3, 20.00, 60.00),
-(4, 3, 1, 30.00, 30.00),
-(5, 4, 4, 40.00, 160.00),
-(5, 5, 5, 50.00, 250.00);
+INSERT INTO Linea (NumeroFactura, ProductoID, Cantidad, PrecioUnitario, Subtotal) VALUES
+('F0001', 1, 2, 10.00, 20.00),
+('F0001', 2, 3, 20.00, 60.00),
+('F0002', 3, 1, 30.00, 30.00),
+('F0002', 4, 4, 40.00, 160.00),
+('F0003', 5, 5, 50.00, 250.00),
+('F0003', 1, 2, 10.00, 20.00),
+('F0004', 2, 3, 20.00, 60.00),
+('F0004', 3, 1, 30.00, 30.00),
+('F0005', 4, 4, 40.00, 160.00),
+('F0005', 5, 5, 50.00, 250.00);

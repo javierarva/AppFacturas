@@ -55,6 +55,7 @@ def crear(conexion, tabla):
         print("\nRegistro creado exitosamente.")
     except Error as e:
         print(f"Error al crear el registro: {e}")
+        conexion.rollback()
 
 def leer(conexion, tabla):
     try:
@@ -110,6 +111,7 @@ def modificar(conexion, tabla):
         print("\nRegistro modificado exitosamente.")
     except Error as e:
         print(f"Error al modificar el registro: {e}")
+        conexion.rollback()
 
 def eliminar(conexion, tabla):
     try:
@@ -131,7 +133,6 @@ def eliminar(conexion, tabla):
                 print("\nEliminación cancelada.")
         else:
             print(f"\nNo se encontró un registro con el ID: {id_registro}")
-
     except Error as e:
         print(f"Error al eliminar el registro: {e}")
 
@@ -148,3 +149,4 @@ def mostrar_listado(conexion):
             print(f"\nNo hay registros en la tabla cabecera.")
     except Error as e:
         print(f"Error al leer los registros: {e}")
+        conexion.rollback()
