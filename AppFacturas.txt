@@ -77,10 +77,10 @@ CREATE TABLE Cabecera (
     BancoID INT,
     Total DOUBLE(10, 2) NOT NULL,
     IVA DOUBLE(4, 2) NOT NULL,
-    FOREIGN KEY (EmpresaID) REFERENCES Empresa(EmpresaID),
-    FOREIGN KEY (ClienteID) REFERENCES Cliente(ClienteID),
-    FOREIGN KEY (DireccionEnvioID) REFERENCES DireccionEnvio(DireccionEnvioID),
-    FOREIGN KEY (BancoID) REFERENCES Banco(BancoID)
+    FOREIGN KEY (EmpresaID) REFERENCES Empresa(EmpresaID) ON DELETE CASCADE,
+    FOREIGN KEY (ClienteID) REFERENCES Cliente(ClienteID) ON DELETE CASCADE,
+    FOREIGN KEY (DireccionEnvioID) REFERENCES DireccionEnvio(DireccionEnvioID) ON DELETE CASCADE,
+    FOREIGN KEY (BancoID) REFERENCES Banco(BancoID) ON DELETE CASCADE
 );
 
 -- Tabla Linea (Detalle de Factura)
