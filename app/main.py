@@ -1,14 +1,7 @@
-import os
 from db.connection import *
 from db.queries import *
 from controllers.functions import *
 from controllers.print import *
-
-def clear_terminal():
-    os.system('cls' if os.name == 'nt' else 'clear')
-
-def pause():
-    input("\nPresiona Enter para continuar...")
 
 def mostrar_tablas(conexion):
     clear_terminal()
@@ -62,8 +55,10 @@ def datos(conexion):
 
 def factura(conexion):
     clear_terminal()
+    check_connection(conexion)
+    
     print("\nHas seleccionado Factura.")
-        
+   
 def impresion(conexion):
     clear_terminal()
     check_connection(conexion)

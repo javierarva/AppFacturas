@@ -1,4 +1,5 @@
 import re
+import os
 
 def confirmar(prompt):
     return input(prompt + "(s/n): ").strip().lower() == 's'
@@ -17,3 +18,9 @@ def valor_valido(valor, tipo):
     elif 'date' in tipo:
         return re.match(r'^\d{4}-\d{2}-\d{2}$', valor) is not None
     return True
+
+def clear_terminal():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+def pause():
+    input("\nPresiona Enter para continuar...")

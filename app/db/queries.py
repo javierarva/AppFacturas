@@ -42,9 +42,9 @@ def crear(conexion, tabla):
                     if not not_null and not valor:
                         valores.append('NULL')
                         break
-                    print(f"Valor no válido para la columna '{columna}' (tipo {tipo}). Por favor, ingrese un valor válido.")
+                    print(f"\nValor no válido para la columna '{columna}' (tipo {tipo}). Por favor, ingrese un valor válido.")
                     if not_null:
-                        print(f"Este campo no puede estar vacío.")
+                        print(f"\nEste campo no puede estar vacío.")
 
         valores_str = ', '.join(["'" + valor + "'" if valor != 'NULL' else valor for valor in valores])
         columnas_str = ', '.join(columnas)
@@ -54,7 +54,7 @@ def crear(conexion, tabla):
 
         print("\nRegistro creado exitosamente.")
     except Error as e:
-        print(f"Error al crear el registro: {e}")
+        print(f"\nError al crear el registro: {e}")
         conexion.rollback()
 
 def leer(conexion, tabla):
@@ -69,7 +69,7 @@ def leer(conexion, tabla):
         else:
             print(f"\nNo hay registros en la tabla {tabla}.")
     except Error as e:
-        print(f"Error al leer los registros: {e}")
+        print(f"\nError al leer los registros: {e}")
 
 def modificar(conexion, tabla):
     try:
@@ -110,7 +110,7 @@ def modificar(conexion, tabla):
 
         print("\nRegistro modificado exitosamente.")
     except Error as e:
-        print(f"Error al modificar el registro: {e}")
+        print(f"\nError al modificar el registro: {e}")
         conexion.rollback()
 
 def eliminar(conexion, tabla):
@@ -134,7 +134,7 @@ def eliminar(conexion, tabla):
         else:
             print(f"\nNo se encontró un registro con el ID: {id_registro}")
     except Error as e:
-        print(f"Error al eliminar el registro: {e}")
+        print(f"\nError al eliminar el registro: {e}")
 
 def mostrar_listado(conexion):
     try:
@@ -148,5 +148,5 @@ def mostrar_listado(conexion):
         else:
             print(f"\nNo hay registros en la tabla cabecera.")
     except Error as e:
-        print(f"Error al leer los registros: {e}")
+        print(f"\nError al leer los registros: {e}")
         conexion.rollback()
