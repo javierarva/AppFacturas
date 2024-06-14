@@ -56,9 +56,9 @@ def datos(conexion):
 def factura(conexion):
     clear_terminal()
     check_connection(conexion)
-    
+
     print("\nHas seleccionado Factura.")
-   
+
 def impresion(conexion):
     clear_terminal()
     check_connection(conexion)
@@ -85,12 +85,11 @@ def impresion(conexion):
             raise ValueError("No se encontraron detalles de factura para esta factura")
 
         crear_pdf_factura(invoice, client, products, details)
+        pause()
+
     except Exception as e:
         print(f"Error: {e}")
-
-    finally:
-        cursor.close()
-        conexion.close()
+        pause()
 
 def listado(conexion):
     clear_terminal()

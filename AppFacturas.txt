@@ -87,10 +87,12 @@ CREATE TABLE Cabecera (
 CREATE TABLE Linea (
     LineaID INT AUTO_INCREMENT PRIMARY KEY,
     NumeroFactura VARCHAR(50) NOT NULL,
+    CabeceraID INT,
     ProductoID INT,
     Cantidad INT NOT NULL,
     PrecioUnitario DOUBLE(10, 2) NOT NULL,
     Subtotal DOUBLE(10, 2) NOT NULL,
+    FOREIGN KEY (CabeceraID) REFERENCES Cabecera(CabeceraID),
     FOREIGN KEY (NumeroFactura) REFERENCES Cabecera(NumeroFactura),
     FOREIGN KEY (ProductoID) REFERENCES Producto(ProductoID)
 );
@@ -160,14 +162,9 @@ INSERT INTO Cabecera (NumeroFactura, Fecha, EmpresaID, ClienteID, DireccionEnvio
 ('F0005', '2024-06-14', 5, 5, 5, 5, 500.00, 21.00);
 
 -- Insertar registros en la tabla Linea (Detalle de Factura)
-INSERT INTO Linea (NumeroFactura, ProductoID, Cantidad, PrecioUnitario, Subtotal) VALUES
-('F0001', 1, 2, 10.00, 20.00),
-('F0001', 2, 3, 20.00, 60.00),
-('F0002', 3, 1, 30.00, 30.00),
-('F0002', 4, 4, 40.00, 160.00),
-('F0003', 5, 5, 50.00, 250.00),
-('F0003', 1, 2, 10.00, 20.00),
-('F0004', 2, 3, 20.00, 60.00),
-('F0004', 3, 1, 30.00, 30.00),
-('F0005', 4, 4, 40.00, 160.00),
-('F0005', 5, 5, 50.00, 250.00);
+INSERT INTO Linea (NumeroFactura, CabeceraID, ProductoID, Cantidad, PrecioUnitario, Subtotal) VALUES
+('F0001', 1, 1, 2, 10.00, 20.00),
+('F0002', 2, 2, 3, 20.00, 60.00),
+('F0003', 3, 3, 1, 30.00, 30.00),
+('F0004', 4, 4, 4, 40.00, 160.00),
+('F0005', 5, 5, 5, 50.00, 250.00);

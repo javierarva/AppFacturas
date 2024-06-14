@@ -77,7 +77,7 @@ def modificar(conexion, tabla):
 
         leer(conexion, tabla)
 
-        id_registro = input("\nIngrese el ID del registro que desea modificar: ").strip()
+        id_registro = input("\nIngrese el ID del registro que desea modificar (o 'salir' para volver al menú anterior): ").strip()
 
         cursor.execute(f"SHOW COLUMNS FROM {tabla}")
         columnas = [columna[0] for columna in cursor.fetchall()]
@@ -95,6 +95,11 @@ def modificar(conexion, tabla):
         nuevos_valores = {}
         for columna in columnas[1:]:
             nuevo_valor = input(f"Ingrese el nuevo valor para la columna '{columna}' (dejar vacío para no modificar): ").strip()
+
+            if nuevo_valor.lower() == 'salir':
+                print("Regresando al menú anterior...")
+                return
+            
             if nuevo_valor:
                 nuevos_valores[columna] = nuevo_valor
 

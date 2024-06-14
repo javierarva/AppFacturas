@@ -31,6 +31,7 @@ def crear_pdf_factura(invoice, client, products, details):
 
     pdf.set_font('Arial', '', 10)
     pdf.cell(0, 10, f'Factura ID: {invoice["CabeceraID"]}', 0, 1)
+    pdf.cell(0, 10, f'Número de Factura: {invoice["NumeroFactura"]}', 0, 1)
     pdf.cell(0, 10, f'Fecha: {invoice["Fecha"]}', 0, 1)
     pdf.cell(0, 10, f'Cliente: {client["Nombre"]}', 0, 1)
     pdf.cell(0, 10, f'Dirección: {client["Direccion"]}', 0, 1)
@@ -51,7 +52,7 @@ def crear_pdf_factura(invoice, client, products, details):
             total_producto = detail['Cantidad'] * detail['PrecioUnitario']
             subtotal_factura += total_producto
 
-            pdf.cell(80, 10, product['Descripcion'], 1)
+            pdf.cell(80, 10, product['Nombre'], 1)
             pdf.cell(30, 10, str(detail['Cantidad']), 1)
             pdf.cell(30, 10, f"{detail['PrecioUnitario']:.2f}", 1)
             pdf.cell(30, 10, f"{total_producto:.2f}", 1)
