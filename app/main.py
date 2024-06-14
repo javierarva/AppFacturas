@@ -122,8 +122,7 @@ def submenu_crud(conexion, tabla):
         if opcion in opciones:
             try:
                 opciones[opcion](conexion, tabla)
-                if opcion == "2":
-                    pause()
+                pause()
             except Error as e:
                 print(f"Error al ejecutar la operación {opcion} en la tabla {tabla}: {e}")
         elif opcion == "5":
