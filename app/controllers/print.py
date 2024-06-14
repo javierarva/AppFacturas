@@ -34,6 +34,8 @@ def crear_pdf_factura(invoice, client, products, details):
     pdf.cell(0, 10, f'Número de Factura: {invoice["NumeroFactura"]}', 0, 1)
     pdf.cell(0, 10, f'Fecha: {invoice["Fecha"]}', 0, 1)
     pdf.cell(0, 10, f'Cliente: {client["Nombre"]}', 0, 1)
+    pdf.cell(0, 10, f'Código Cliente: {client["CodigoCliente"]}', 0, 1)  # Añadimos Código Cliente
+    pdf.cell(0, 10, f'NIF/NIE: {client["NIF_NIE"]}', 0, 1)  # Añadimos NIF/NIE
     pdf.cell(0, 10, f'Dirección: {client["Direccion"]}', 0, 1)
 
     pdf.ln(10)

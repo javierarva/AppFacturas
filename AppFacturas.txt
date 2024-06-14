@@ -19,6 +19,8 @@ CREATE TABLE Empresa (
 -- Tabla Cliente
 CREATE TABLE Cliente (
     ClienteID INT AUTO_INCREMENT PRIMARY KEY,
+    CodigoCliente VARCHAR(50) NOT NULL,
+    NIF_NIE VARCHAR(20) NOT NULL,
     Nombre VARCHAR(255) NOT NULL,
     Apellido VARCHAR(255),
     Direccion VARCHAR(255),
@@ -106,12 +108,12 @@ INSERT INTO Empresa (Nombre, Direccion, Telefono, Email) VALUES
 ('Empresa E', 'Calle 5, Ciudad E', '321654987', 'contacto@empresaE.com');
 
 -- Insertar registros en la tabla Cliente
-INSERT INTO Cliente (Nombre, Apellido, Direccion, Telefono, Email) VALUES
-('Juan', 'Pérez', 'Calle 1, Ciudad A', '123456789', 'juan.perez@correo.com'),
-('María', 'Gómez', 'Calle 2, Ciudad B', '987654321', 'maria.gomez@correo.com'),
-('Carlos', 'López', 'Calle 3, Ciudad C', '456123789', 'carlos.lopez@correo.com'),
-('Ana', 'Martínez', 'Calle 4, Ciudad D', '789456123', 'ana.martinez@correo.com'),
-('Luis', 'Hernández', 'Calle 5, Ciudad E', '321654987', 'luis.hernandez@correo.com');
+INSERT INTO Cliente (CodigoCliente, NIF_NIE, Nombre, Apellido, Direccion, Telefono, Email) VALUES
+('C001', 'NIF001', 'Juan', 'Pérez', 'Calle 1, Ciudad A', '123456789', 'juan.perez@correo.com'),
+('C002', 'NIF002', 'María', 'Gómez', 'Calle 2, Ciudad B', '987654321', 'maria.gomez@correo.com'),
+('C003', 'NIF003', 'Carlos', 'López', 'Calle 3, Ciudad C', '456123789', 'carlos.lopez@correo.com'),
+('C004', 'NIF004', 'Ana', 'Martínez', 'Calle 4, Ciudad D', '789456123', 'ana.martinez@correo.com'),
+('C005', 'NIF005', 'Luis', 'Hernández', 'Calle 5, Ciudad E', '321654987', 'luis.hernandez@correo.com');
 
 -- Insertar registros en la tabla Producto
 INSERT INTO Producto (Nombre, Descripcion, Precio) VALUES
