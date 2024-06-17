@@ -62,34 +62,41 @@ def factura(conexion):
 def impresion(conexion):
     clear_terminal()
     check_connection(conexion)
+
+    mostrar_listado(conexion)
     
     cursor = conexion.cursor(dictionary=True)
 
-    id_factura = int(input("Ingrese el ID de la factura que desea imprimir: "))
+    while True:
+        try:
+            id_factura = int(input("\nIngrese el ID de la factura que desea imprimir: "))
+            invoice = obtener_factura(cursor, id_factura)
+            if not invoice:
+                raise ValueError(f"No se encontró ninguna factura con ID {id_factura}")
 
-    try:
-        invoice = obtener_factura(cursor, id_factura)
-        if not invoice:
-            raise ValueError(f"No se encontró ninguna factura con ID {id_factura}")
+            client = obtener_cliente(cursor, invoice['ClienteID'])
+            if not client:
+                raise ValueError(f"No se encontró ningún cliente con el ID {invoice['ClienteID']}")
+            
+            products = obtener_productos(cursor, invoice['CabeceraID'])
+            if not products:
+                raise ValueError("No se encontraron productos para esta factura")
 
-        client = obtener_cliente(cursor, invoice['ClienteID'])
-        if not client:
-            raise ValueError(f"No se encontró ningún cliente con el ID {invoice['ClienteID']}")
-        
-        products = obtener_productos(cursor, invoice['CabeceraID'])
-        if not products:
-            raise ValueError("No se encontraron productos para esta factura")
+            details = obtener_detalles_factura(cursor, invoice['CabeceraID'])
+            if not details:
+                raise ValueError("No se encontraron detalles de factura para esta factura")
 
-        details = obtener_detalles_factura(cursor, invoice['CabeceraID'])
-        if not details:
-            raise ValueError("No se encontraron detalles de factura para esta factura")
+            crear_pdf_factura(invoice, client, products, details)
+            pause()
+            break
 
-        crear_pdf_factura(invoice, client, products, details)
-        pause()
+        except ValueError as e:
+            print(f"Por favor, intente de nuevo con una ID válida.")
+        except Exception as e:
+            print(f"Error inesperado: {e}")
+            pause()
+            break
 
-    except Exception as e:
-        print(f"Error: {e}")
-        pause()
 
 def listado(conexion):
     clear_terminal()
