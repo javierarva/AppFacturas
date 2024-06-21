@@ -10,10 +10,6 @@ def obtener_factura(cursor, id_factura):
     cursor.execute("SELECT * FROM cabecera WHERE CabeceraID = %s", (id_factura,))
     return cursor.fetchone()
 
-def obtener_cliente(cursor, id_cliente):
-    cursor.execute("SELECT * FROM cliente WHERE ClienteID = %s", (id_cliente,))
-    return cursor.fetchone()
-
 def obtener_productos(cursor, id_factura):
     cursor.execute("SELECT * FROM producto WHERE ProductoID IN (SELECT ProductoID FROM linea WHERE CabeceraID = %s)", (id_factura,))
     return cursor.fetchall()
@@ -22,7 +18,7 @@ def obtener_detalles_factura(cursor, id_factura):
     cursor.execute("SELECT * FROM linea WHERE CabeceraID = %s", (id_factura,))
     return cursor.fetchall()
 
-def crear_pdf_factura(invoice, client, products, details):
+def crear_pdf_factura(invoice, products, details):
     pdf = FPDF()
     pdf.add_page()
 
@@ -33,10 +29,10 @@ def crear_pdf_factura(invoice, client, products, details):
     pdf.cell(0, 10, f'Factura ID: {invoice["CabeceraID"]}', 0, 1)
     pdf.cell(0, 10, f'Número de Factura: {invoice["NumeroFactura"]}', 0, 1)
     pdf.cell(0, 10, f'Fecha: {invoice["Fecha"]}', 0, 1)
-    pdf.cell(0, 10, f'Cliente: {client["Nombre"]}', 0, 1)
-    pdf.cell(0, 10, f'Código Cliente: {client["CodigoCliente"]}', 0, 1)
-    pdf.cell(0, 10, f'NIF/NIE: {client["NIF_NIE"]}', 0, 1)
-    pdf.cell(0, 10, f'Dirección: {client["Direccion"]}', 0, 1)
+    pdf.cell(0, 10, f'Cliente: {invoice["ClienteNombre"]} {invoice["ClienteApellido"]}', 0, 1)
+    pdf.cell(0, 10, f'Código Cliente: {invoice["ClienteCodigoCliente"]}', 0, 1)
+    pdf.cell(0, 10, f'NIF/NIE: {invoice["ClienteNIF_NIE"]}', 0, 1)
+    pdf.cell(0, 10, f'Dirección: {invoice["ClienteDireccion"]}', 0, 1)
 
     pdf.ln(10)
 
@@ -84,7 +80,7 @@ def crear_pdf_factura(invoice, client, products, details):
     os.makedirs(output_dir, exist_ok=True)
 
     timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-    client_name_cleaned = client["Nombre"].replace(" ", "_")
+    client_name_cleaned = invoice["ClienteNombre"].replace(" ", "_")
     output_file = os.path.join(output_dir, f'factura_{client_name_cleaned}_{timestamp}.pdf')
 
     pdf.output(output_file)

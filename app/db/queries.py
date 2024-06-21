@@ -1,6 +1,7 @@
 from mysql.connector import Error
 from tabulate import tabulate
 from controllers.functions import confirmar, valor_valido
+import pandas as pd
 
 def crear(conexion, tabla):
     try:
@@ -32,7 +33,7 @@ def crear(conexion, tabla):
                 valor = input(f"\n'{columna}' (tipo {tipo}): ").strip()
 
                 if valor.lower() == "salir":
-                    print("Regresando al menú anterior...")
+                    print("\nRegresando al menú anterior...")
                     return
                 
                 if valor_valido(valor, tipo) and (not not_null or valor):
@@ -77,7 +78,7 @@ def modificar(conexion, tabla):
 
         leer(conexion, tabla)
 
-        id_registro = input("\nIngrese el ID del registro que desea modificar (o 'salir' para volver al menú anterior): ").strip()
+        id_registro = input("\nIngrese el ID del registro que desea modificar: ").strip()
 
         cursor.execute(f"SHOW COLUMNS FROM {tabla}")
         columnas = [columna[0] for columna in cursor.fetchall()]
@@ -95,10 +96,6 @@ def modificar(conexion, tabla):
         nuevos_valores = {}
         for columna in columnas[1:]:
             nuevo_valor = input(f"Ingrese el nuevo valor para la columna '{columna}' (dejar vacío para no modificar): ").strip()
-
-            if nuevo_valor.lower() == 'salir':
-                print("Regresando al menú anterior...")
-                return
             
             if nuevo_valor:
                 nuevos_valores[columna] = nuevo_valor
@@ -144,14 +141,20 @@ def eliminar(conexion, tabla):
 def mostrar_listado(conexion):
     try:
         cursor = conexion.cursor()
-        cursor.execute(f"SELECT * FROM cabecera")
+        cursor.execute("SELECT * FROM cabecera")
         registros = cursor.fetchall()
         if registros:
             headers = [i[0] for i in cursor.description]
-            print(f"\nRegistros en la tabla cabecera:")
-            print(tabulate(registros, headers=headers, tablefmt="grid"))
+            df = pd.DataFrame(registros, columns=headers)
+            
+            segment_size = 8
+            
+            for start in range(0, len(headers), segment_size):
+                end = start + segment_size
+                print(f"\nMostrando columnas {start+1} a {end}:")
+                print(df.iloc[:, start:end].to_string(index=False))
         else:
-            print(f"\nNo hay registros en la tabla cabecera.")
+            print("\nNo hay registros en la tabla cabecera.")
     except Error as e:
         print(f"\nError al leer los registros: {e}")
         conexion.rollback()

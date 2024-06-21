@@ -2,6 +2,7 @@ from db.connection import *
 from db.queries import *
 from controllers.functions import *
 from controllers.print import *
+from controllers.billing import *
 
 def mostrar_tablas(conexion):
     clear_terminal()
@@ -57,7 +58,7 @@ def factura(conexion):
     clear_terminal()
     check_connection(conexion)
 
-    print("\nHas seleccionado Factura.")
+    insertar_factura(cursor, conexion)
     pause()
 
 def impresion(conexion):
@@ -71,13 +72,10 @@ def impresion(conexion):
     while True:
         try:
             id_factura = int(input("\nIngrese el ID de la factura que desea imprimir: "))
+            
             invoice = obtener_factura(cursor, id_factura)
             if not invoice:
                 raise ValueError(f"No se encontró ninguna factura con ID {id_factura}")
-
-            client = obtener_cliente(cursor, invoice['ClienteID'])
-            if not client:
-                raise ValueError(f"No se encontró ningún cliente con el ID {invoice['ClienteID']}")
             
             products = obtener_productos(cursor, invoice['CabeceraID'])
             if not products:
@@ -87,14 +85,18 @@ def impresion(conexion):
             if not details:
                 raise ValueError("No se encontraron detalles de factura para esta factura")
 
-            crear_pdf_factura(invoice, client, products, details)
+            crear_pdf_factura(invoice, products, details)
+
             pause()
             break
 
         except ValueError as e:
-            print(f"Por favor, intente de nuevo con una ID válida.")
+            print(f"\nPor favor, intente de nuevo con una ID válida.")
+            pause()
+            break
+
         except Exception as e:
-            print(f"Error inesperado: {e}")
+            print(f"\nError inesperado: {e}")
             pause()
             break
 
@@ -108,6 +110,7 @@ def listado(conexion):
 def submenu_crud(conexion, tabla):
     while True:
         clear_terminal()
+
         check_connection(conexion)
         
         opciones = {
@@ -126,12 +129,14 @@ def submenu_crud(conexion, tabla):
 
         opcion = input("\nElige una opción: ").strip()
 
+        clear_terminal()
+
         if opcion in opciones:
             try:
                 opciones[opcion](conexion, tabla)
                 pause()
             except Error as e:
-                print(f"Error al ejecutar la operación {opcion} en la tabla {tabla}: {e}")
+                print(f"\nError al ejecutar la operación {opcion} en la tabla {tabla}: {e}")
         elif opcion == "5":
             if confirmar("\n¿Estás seguro de que deseas volver al menú anterior? "):
                 break
@@ -144,7 +149,7 @@ def menu():
         try:
             check_connection(conexion)
         except Error as e:
-            print(f"Error de conexión: {e}")
+            print(f"\nError de conexión: {e}")
             break
  
         opciones = {
@@ -167,7 +172,7 @@ def menu():
             try:
                 opciones[opcion](conexion)
             except Error as e:
-                print(f"Error al ejecutar la opción {opcion}: {e}")
+                print(f"\nError al ejecutar la opción {opcion}: {e}")
         elif opcion == "5":
             if confirmar("\n¿Estás seguro de que deseas salir? "):
                 break
@@ -176,6 +181,7 @@ def menu():
  
     if conexion:
         conexion.close()
+        cursor.close()
 
 if __name__ == "__main__":
     menu()

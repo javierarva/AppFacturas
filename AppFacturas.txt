@@ -73,16 +73,27 @@ CREATE TABLE Cabecera (
     CabeceraID INT AUTO_INCREMENT PRIMARY KEY,
     NumeroFactura VARCHAR(50) NOT NULL UNIQUE,
     Fecha DATE NOT NULL,
-    EmpresaID INT,
-    ClienteID INT,
-    DireccionEnvioID INT,
-    BancoID INT,
     Total DOUBLE(10, 2) NOT NULL,
     IVA DOUBLE(4, 2) NOT NULL,
-    FOREIGN KEY (EmpresaID) REFERENCES Empresa(EmpresaID) ON DELETE CASCADE,
-    FOREIGN KEY (ClienteID) REFERENCES Cliente(ClienteID) ON DELETE CASCADE,
-    FOREIGN KEY (DireccionEnvioID) REFERENCES DireccionEnvio(DireccionEnvioID) ON DELETE CASCADE,
-    FOREIGN KEY (BancoID) REFERENCES Banco(BancoID) ON DELETE CASCADE
+    EmpresaNombre VARCHAR(255) NOT NULL,
+    EmpresaDireccion VARCHAR(255),
+    EmpresaTelefono VARCHAR(20),
+    EmpresaEmail VARCHAR(255),
+    ClienteCodigoCliente VARCHAR(50) NOT NULL,
+    ClienteNIF_NIE VARCHAR(20) NOT NULL,
+    ClienteNombre VARCHAR(255) NOT NULL,
+    ClienteApellido VARCHAR(255),
+    ClienteDireccion VARCHAR(255),
+    ClienteTelefono VARCHAR(20),
+    ClienteEmail VARCHAR(255),
+    DireccionEnvioCalle VARCHAR(255) NOT NULL,
+    DireccionEnvioNumero VARCHAR(10),
+    DireccionEnvioCiudad VARCHAR(255),
+    DireccionEnvioProvincia VARCHAR(255),
+    DireccionEnvioCodigoPostal VARCHAR(20),
+    BancoNombre VARCHAR(255) NOT NULL,
+    BancoNumeroCuenta VARCHAR(20) NOT NULL,
+    BancoSucursal VARCHAR(255)
 );
 
 -- Tabla Linea (Detalle de Factura)
@@ -156,12 +167,25 @@ INSERT INTO Banco (Nombre, NumeroCuenta, Sucursal) VALUES
 ('Banco E', '9988776655', 'Sucursal E');
 
 -- Insertar registros en la tabla Cabecera (Factura)
-INSERT INTO Cabecera (NumeroFactura, Fecha, EmpresaID, ClienteID, DireccionEnvioID, BancoID, Total, IVA) VALUES
-('F0001', '2024-06-10', 1, 1, 1, 1, 100.00, 21.00),
-('F0002', '2024-06-11', 2, 2, 2, 2, 200.00, 21.00),
-('F0003', '2024-06-12', 3, 3, 3, 3, 300.00, 21.00),
-('F0004', '2024-06-13', 4, 4, 4, 4, 400.00, 21.00),
-('F0005', '2024-06-14', 5, 5, 5, 5, 500.00, 21.00);
+INSERT INTO Cabecera (NumeroFactura, Fecha, Total, IVA, EmpresaNombre, EmpresaDireccion, EmpresaTelefono, EmpresaEmail,
+    ClienteCodigoCliente, ClienteNIF_NIE, ClienteNombre, ClienteApellido, ClienteDireccion, ClienteTelefono, ClienteEmail,
+    DireccionEnvioCalle, DireccionEnvioNumero, DireccionEnvioCiudad, DireccionEnvioProvincia, DireccionEnvioCodigoPostal,
+    BancoNombre, BancoNumeroCuenta, BancoSucursal) VALUES
+('F0001', '2024-06-10', 100.00, 21.00, 'Empresa A', 'Calle 1, Ciudad A', '123456789', 'contacto@empresaA.com',
+    'C001', 'NIF001', 'Juan', 'Pérez', 'Calle 1, Ciudad A', '123456789', 'juan.perez@correo.com',
+    'Calle 1', '123', 'Ciudad A', 'Provincia A', '00001', 'Banco A', '1234567890', 'Sucursal A'),
+('F0002', '2024-06-11', 200.00, 21.00, 'Empresa B', 'Calle 2, Ciudad B', '987654321', 'contacto@empresaB.com',
+    'C002', 'NIF002', 'María', 'Gómez', 'Calle 2, Ciudad B', '987654321', 'maria.gomez@correo.com',
+    'Calle 2', '456', 'Ciudad B', 'Provincia B', '00002', 'Banco B', '0987654321', 'Sucursal B'),
+('F0003', '2024-06-12', 300.00, 21.00, 'Empresa C', 'Calle 3, Ciudad C', '456123789', 'contacto@empresaC.com',
+    'C003', 'NIF003', 'Carlos', 'López', 'Calle 3, Ciudad C', '456123789', 'carlos.lopez@correo.com',
+    'Calle 3', '789', 'Ciudad C', 'Provincia C', '00003', 'Banco C', '1122334455', 'Sucursal C'),
+('F0004', '2024-06-13', 400.00, 21.00, 'Empresa D', 'Calle 4, Ciudad D', '789456123', 'contacto@empresaD.com',
+    'C004', 'NIF004', 'Ana', 'Martínez', 'Calle 4, Ciudad D', '789456123', 'ana.martinez@correo.com',
+    'Calle 4', '101', 'Ciudad D', 'Provincia D', '00004', 'Banco D', '5566778899', 'Sucursal D'),
+('F0005', '2024-06-14', 500.00, 21.00, 'Empresa E', 'Calle 5, Ciudad E', '321654987', 'contacto@empresaE.com',
+    'C005', 'NIF005', 'Luis', 'Hernández', 'Calle 5, Ciudad E', '321654987', 'luis.hernandez@correo.com',
+    'Calle 5', '202', 'Ciudad E', 'Provincia E', '00005', 'Banco E', '9988776655', 'Sucursal E');
 
 -- Insertar registros en la tabla Linea (Detalle de Factura)
 INSERT INTO Linea (NumeroFactura, CabeceraID, ProductoID, Cantidad, PrecioUnitario, Subtotal) VALUES
