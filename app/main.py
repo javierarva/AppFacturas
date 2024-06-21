@@ -58,13 +58,14 @@ def factura(conexion):
     check_connection(conexion)
 
     print("\nHas seleccionado Factura.")
+    pause()
 
 def impresion(conexion):
     clear_terminal()
     check_connection(conexion)
 
     mostrar_listado(conexion)
-    
+
     cursor = conexion.cursor(dictionary=True)
 
     while True:
@@ -96,7 +97,6 @@ def impresion(conexion):
             print(f"Error inesperado: {e}")
             pause()
             break
-
 
 def listado(conexion):
     clear_terminal()
