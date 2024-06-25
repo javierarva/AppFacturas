@@ -21,8 +21,7 @@ def insertar_factura(cursor, conexion):
     cliente_id = int(input("Ingrese el ID del cliente: "))
     direccion_envio_id = int(input("Ingrese el ID de la dirección de envío: "))
     banco_id = int(input("Ingrese el ID del banco: "))
-    total = float(input("Ingrese el total: "))
-    iva = float(input("Ingrese el IVA: "))
+    iva_percent = float(input("Ingrese el porcentaje de IVA (ej. 21 para 21%): ")) / 100
     
     cursor.execute("SELECT Nombre, Direccion, Telefono, Email FROM Empresa WHERE EmpresaID = %s", (empresa_id,))
     empresa = cursor.fetchone()
@@ -43,13 +42,13 @@ def insertar_factura(cursor, conexion):
     banco = cursor.fetchone()
     
     add_cabecera = ("INSERT INTO Cabecera "
-                    "(NumeroFactura, Fecha, Total, IVA, EmpresaNombre, EmpresaDireccion, EmpresaTelefono, EmpresaEmail, "
+                    "(NumeroFactura, Fecha, EmpresaNombre, EmpresaDireccion, EmpresaTelefono, EmpresaEmail, "
                     "ClienteCodigoCliente, ClienteNIF_NIE, ClienteNombre, ClienteApellido, ClienteDireccion, ClienteTelefono, ClienteEmail, "
                     "DireccionEnvioCalle, DireccionEnvioNumero, DireccionEnvioCiudad, DireccionEnvioProvincia, DireccionEnvioCodigoPostal, "
                     "BancoNombre, BancoNumeroCuenta, BancoSucursal) "
-                    "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
+                    "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
     
-    data_cabecera = (numero_factura, fecha, total, iva, empresa[0], empresa[1], empresa[2], empresa[3], 
+    data_cabecera = (numero_factura, fecha, empresa[0], empresa[1], empresa[2], empresa[3], 
                      cliente[0], cliente[1], cliente[2], cliente[3], cliente[4], cliente[5], cliente[6],
                      direccion_envio[0], direccion_envio[1], direccion_envio[2], provincia, codigo_postal,
                      banco[0], banco[1], banco[2])
@@ -61,6 +60,7 @@ def insertar_factura(cursor, conexion):
     
     print(f"\nRegistro insertado en la tabla Cabecera con Número de Factura: {numero_factura}")
 
+    total = 0
     producto_id = int(input("\nIngrese el ID del producto: "))
     cantidad = int(input("Ingrese la cantidad: "))
     
@@ -70,6 +70,7 @@ def insertar_factura(cursor, conexion):
     if producto:
         precio_unitario = producto[0]
         subtotal = cantidad * precio_unitario
+        total += subtotal
         
         add_linea = ("INSERT INTO Linea (NumeroFactura, CabeceraID, ProductoID, Cantidad, PrecioUnitario, Subtotal) "
                      "VALUES (%s, %s, %s, %s, %s, %s)")
@@ -81,3 +82,9 @@ def insertar_factura(cursor, conexion):
         print("\nRegistro insertado en la tabla Linea.")        
     else:
         print(f"\nNo se encontró ningún producto con ID {producto_id}. Inténtelo de nuevo.")
+
+    iva = total * iva_percent
+
+    update_cabecera = ("UPDATE Cabecera SET Total = %s, IVA = %s WHERE CabeceraID = %s")
+    cursor.execute(update_cabecera, (total, iva, cabecera_id))
+    conexion.commit()
