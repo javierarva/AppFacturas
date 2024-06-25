@@ -2,6 +2,7 @@ from fpdf import FPDF
 from db.connection import connector
 import os
 import datetime
+from controllers.functions import pause
 
 conexion = connector()
 cursor = conexion.cursor()
@@ -85,3 +86,37 @@ def crear_pdf_factura(invoice, products, details):
 
     pdf.output(output_file)
     print(f"Factura generada con éxito: {output_file}")
+
+def crear_impresion():
+    cursor = conexion.cursor(dictionary=True)
+
+    while True:
+        try:
+            id_factura = int(input("\nIngrese el ID de la factura que desea imprimir: "))
+            
+            invoice = obtener_factura(cursor, id_factura)
+            if not invoice:
+                raise ValueError(f"No se encontró ninguna factura con ID {id_factura}")
+            
+            products = obtener_productos(cursor, invoice['CabeceraID'])
+            if not products:
+                raise ValueError("No se encontraron productos para esta factura")
+
+            details = obtener_detalles_factura(cursor, invoice['CabeceraID'])
+            if not details:
+                raise ValueError("No se encontraron detalles de factura para esta factura")
+
+            crear_pdf_factura(invoice, products, details)
+
+            pause()
+            break
+
+        except ValueError as e:
+            print(f"\nPor favor, intente de nuevo con una ID válida.")
+            pause()
+            break
+
+        except Exception as e:
+            print(f"\nError inesperado: {e}")
+            pause()
+            break
