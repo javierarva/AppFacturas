@@ -137,6 +137,7 @@ def eliminar(conexion, tabla):
             print(f"\nNo se encontró un registro con el ID: {id_registro}")
     except Error as e:
         print(f"\nError al eliminar el registro: {e}")
+        conexion.rollback()
 
 def mostrar_listado(conexion):
     try:
@@ -157,4 +158,3 @@ def mostrar_listado(conexion):
             print("\nNo hay registros en la tabla cabecera.")
     except Error as e:
         print(f"\nError al leer los registros: {e}")
-        conexion.rollback()
