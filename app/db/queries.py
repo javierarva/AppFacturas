@@ -25,12 +25,16 @@ def crear(conexion, tabla):
                 tipos.append(tipo)
                 not_nulls.append(is_nullable == "NO")
 
+        max_length = max(len(columna) for columna in columnas) + 2
+
         print("\nIngrese los valores para cada columna. Escriba 'salir' para volver al menú anterior en cualquier momento.")
+        print(f"\nRegistrando en la tabla {tabla}...")
 
         valores = []
         for columna, tipo, not_null in zip(columnas, tipos, not_nulls):
             while True:
-                valor = input(f"\n'{columna}' (tipo {tipo}): ").strip()
+                prompt = f"'{columna}':".ljust(max_length)
+                valor = input(prompt).strip()
 
                 if valor.lower() == "salir":
                     print("\nRegresando al menú anterior...")
@@ -43,7 +47,7 @@ def crear(conexion, tabla):
                     if not not_null and not valor:
                         valores.append('NULL')
                         break
-                    print(f"\nValor no válido para la columna '{columna}' (tipo {tipo}). Por favor, ingrese un valor válido.")
+                    print(f"\nValor no válido para la columna '{columna}'. Por favor, ingrese un valor válido.")
                     if not_null:
                         print(f"\nEste campo no puede estar vacío.")
 
@@ -93,9 +97,12 @@ def modificar(conexion, tabla):
             print(f"\nNo se encontró ningún registro con ID {id_registro}.")
             return
 
+        max_length = max(len(columna) for columna in columnas[1:]) + 2
+
         nuevos_valores = {}
         for columna in columnas[1:]:
-            nuevo_valor = input(f"Ingrese el nuevo valor para la columna '{columna}' (dejar vacío para no modificar): ").strip()
+            prompt = f"'{columna}':".ljust(max_length)
+            nuevo_valor = input(prompt).strip()
             
             if nuevo_valor:
                 nuevos_valores[columna] = nuevo_valor

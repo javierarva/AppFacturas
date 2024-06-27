@@ -8,7 +8,7 @@ conexion = connector()
 cursor = conexion.cursor()
 
 def obtener_factura(cursor, id_factura):
-    cursor.execute("SELECT * FROM cabecera WHERE CabeceraID = %s", (id_factura,))
+    cursor.execute("SELECT c.*, b.Nombre AS BancoNombre, b.NumeroCuenta, b.Sucursal FROM cabecera c JOIN banco b ON c.BancoNombre = b.Nombre WHERE c.CabeceraID = %s", (id_factura,))
     return cursor.fetchone()
 
 def obtener_productos(cursor, id_factura):
@@ -76,6 +76,13 @@ def crear_pdf_factura(invoice, products, details):
     pdf.set_font('Arial', 'B', 10)
     pdf.cell(140, 10, 'Total Factura', 1)
     pdf.cell(30, 10, f"{total_factura:.2f}", 1)
+
+    pdf.ln(10)
+
+    pdf.set_font('Arial', '', 10)
+    pdf.cell(0, 10, f'Nombre del Banco: {invoice["BancoNombre"]}', 0, 1)
+    pdf.cell(0, 10, f'Número de Cuenta: {invoice["NumeroCuenta"]}', 0, 1)
+    pdf.cell(0, 10, f'Sucursal: {invoice["Sucursal"]}', 0, 1)
 
     output_dir = os.path.join(os.path.dirname(__file__), '..', '..', 'invoices')
     os.makedirs(output_dir, exist_ok=True)

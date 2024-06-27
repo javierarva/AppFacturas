@@ -74,30 +74,35 @@ def insertar_factura(cursor, conexion):
         
     try:
         total = 0
-        producto_id = int(input("\nIngrese el ID del producto: "))
-        cantidad = int(input("Ingrese la cantidad: "))
-    except ValueError as e:
-        print(f"\nEntrada inválida: {e}")
+        while True:
+            producto_id = input("\nIngrese el ID del producto (o 'salir' para terminar): ")
+            if producto_id.lower() == 'salir':
+                break
+            try:
+                producto_id = int(producto_id)
+                cantidad = int(input("Ingrese la cantidad: "))
+            except ValueError as e:
+                print(f"\nEntrada inválida: {e}")
+                continue
 
-    try:
-        cursor.execute("SELECT Precio FROM Producto WHERE ProductoID = %s", (producto_id,))
-        producto = cursor.fetchone()
-        
-        if producto:
-            precio_unitario = producto[0]
-            subtotal = cantidad * precio_unitario
-            total += subtotal
+            cursor.execute("SELECT Precio FROM Producto WHERE ProductoID = %s", (producto_id,))
+            producto = cursor.fetchone()
+            
+            if producto:
+                precio_unitario = producto[0]
+                subtotal = cantidad * precio_unitario
+                total += subtotal
 
-            add_linea = ("INSERT INTO Linea (NumeroFactura, CabeceraID, ProductoID, Cantidad, PrecioUnitario, Subtotal) "
-                         "VALUES (%s, %s, %s, %s, %s, %s)")
-            data_linea = (numero_factura, cabecera_id, producto_id, cantidad, precio_unitario, subtotal)
+                add_linea = ("INSERT INTO Linea (NumeroFactura, CabeceraID, ProductoID, Cantidad, PrecioUnitario, Subtotal) "
+                             "VALUES (%s, %s, %s, %s, %s, %s)")
+                data_linea = (numero_factura, cabecera_id, producto_id, cantidad, precio_unitario, subtotal)
 
-            cursor.execute(add_linea, data_linea)
-            conexion.commit()
+                cursor.execute(add_linea, data_linea)
+                conexion.commit()
 
-            print("\nRegistro insertado en la tabla Linea.")
-        else:
-            print(f"\nNo se encontró ningún producto con ID {producto_id}. Inténtelo de nuevo.")
+                print("\nRegistro insertado en la tabla Linea.")
+            else:
+                print(f"\nNo se encontró ningún producto con ID {producto_id}. Inténtelo de nuevo.")
     except Exception as e:
         print(f"\nError al insertar datos en la tabla Linea: {e}")
         conexion.rollback()
