@@ -149,19 +149,70 @@ def eliminar(conexion, tabla):
 def mostrar_listado(conexion):
     try:
         cursor = conexion.cursor()
-        cursor.execute("SELECT * FROM cabecera")
-        registros = cursor.fetchall()
-        if registros:
-            headers = [i[0] for i in cursor.description]
-            df = pd.DataFrame(registros, columns=headers)
+        
+        criterios = {
+            "1": "NumeroFactura",
+            "2": "Fecha",
+            "3": "Total",
+            "4": "EmpresaNombre",
+            "5": "ClienteCodigoCliente",
+            "6": "ClienteNombre",
+            "7": "ClienteApellido",
+            "8": "salir"
+        }
+
+        while True:
+            print("\nOpciones de búsqueda:")
+            print("1. Número de Factura")
+            print("2. Fecha (YYYY-MM-DD)")
+            print("3. Total")
+            print("4. Nombre de la Empresa")
+            print("5. Código del Cliente")
+            print("6. Nombre del Cliente")
+            print("7. Apellido del Cliente")
+            print("8. Salir")
+
+            opcion = input("\nSeleccione una opción de búsqueda: ").strip()
+
+            if opcion == "8" or opcion.lower() == "salir":
+                break
+
+            criterio = criterios.get(opcion)
+            if not criterio:
+                print("\nOpción no válida. Por favor, elija de nuevo.")
+                continue
+
+            valor = input(f"\nIngrese el valor para {criterio}: ").strip()
+            if valor.lower() == "salir":
+                break
+
+            if criterio == "Fecha":
+                where_clause = f"{criterio} = '{valor}'"
+            elif criterio == "Total":
+                where_clause = f"{criterio} = {valor}"
+            else:
+                where_clause = f"{criterio} LIKE '%{valor}%'"
+
+            query = f"SELECT * FROM cabecera WHERE {where_clause}"
+
+            cursor.execute(query)
+            registros = cursor.fetchall()
+            if registros:
+                headers = [i[0] for i in cursor.description]
+                df = pd.DataFrame(registros, columns=headers)
+
+                segment_size = 8
+
+                for start in range(0, len(headers), segment_size):
+                    end = start + segment_size
+                    print(f"\nMostrando columnas {start+1} a {end}:")
+                    print(df.iloc[:, start:end].to_string(index=False))
+            else:
+                print("\nNo hay registros que coincidan con los criterios de búsqueda.")
             
-            segment_size = 8
-            
-            for start in range(0, len(headers), segment_size):
-                end = start + segment_size
-                print(f"\nMostrando columnas {start+1} a {end}:")
-                print(df.iloc[:, start:end].to_string(index=False))
-        else:
-            print("\nNo hay registros en la tabla cabecera.")
+            continuar = input("\n¿Desea realizar otra búsqueda? (s/n): ").strip().lower()
+            if continuar != 's':
+                break
+
     except Error as e:
         print(f"\nError al leer los registros: {e}")
