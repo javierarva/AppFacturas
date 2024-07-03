@@ -187,15 +187,26 @@ def mostrar_listado(conexion):
             if criterio == "Buscar en toda la tabla":
                 query = "SELECT * FROM cabecera"
             else:
-                valor = input(f"Ingrese el valor para {criterio}: ").strip()
-                if valor.lower() == "salir":
-                    break
-
-                if criterio == "Fecha":
-                    where_clause = f"{criterio} = '{valor}'"
-                elif criterio == "Total":
-                    where_clause = f"{criterio} = {valor}"
+                if criterio == "Total":
+                    valor_min = input(f"Ingrese el valor mínimo para {criterio}: ").strip()
+                    if valor_min.lower() == "salir":
+                        break
+                    valor_max = input(f"Ingrese el valor máximo para {criterio}: ").strip()
+                    if valor_max.lower() == "salir":
+                        break
+                    where_clause = f"{criterio} BETWEEN {valor_min} AND {valor_max}"
+                elif criterio == "Fecha":
+                    fecha_inicio = input(f"Ingrese la fecha de inicio para {criterio} (YYYY-MM-DD): ").strip()
+                    if fecha_inicio.lower() == "salir":
+                        break
+                    fecha_fin = input(f"Ingrese la fecha de fin para {criterio} (YYYY-MM-DD): ").strip()
+                    if fecha_fin.lower() == "salir":
+                        break
+                    where_clause = f"{criterio} BETWEEN '{fecha_inicio}' AND '{fecha_fin}'"
                 else:
+                    valor = input(f"Ingrese el valor para {criterio}: ").strip()
+                    if valor.lower() == "salir":
+                        break
                     where_clause = f"{criterio} LIKE '%{valor}%'"
 
                 query = f"SELECT * FROM cabecera WHERE {where_clause}"
