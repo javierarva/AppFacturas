@@ -1,6 +1,6 @@
 from mysql.connector import Error
 from tabulate import tabulate
-from controllers.functions import confirmar, valor_valido
+from controllers.functions import *
 import pandas as pd
 
 def crear(conexion, tabla):
@@ -158,7 +158,8 @@ def mostrar_listado(conexion):
             "5": "ClienteCodigoCliente",
             "6": "ClienteNombre",
             "7": "ClienteApellido",
-            "8": "salir"
+            "8": "Buscar en toda la tabla",
+            "9": "salir"
         }
 
         while True:
@@ -170,11 +171,12 @@ def mostrar_listado(conexion):
             print("5. Código del Cliente")
             print("6. Nombre del Cliente")
             print("7. Apellido del Cliente")
-            print("8. Salir")
+            print("8. Buscar en toda la tabla")
+            print("9. Salir")
 
             opcion = input("\nSeleccione una opción de búsqueda: ").strip()
 
-            if opcion == "8" or opcion.lower() == "salir":
+            if opcion == "9" or opcion.lower() == "salir":
                 break
 
             criterio = criterios.get(opcion)
@@ -182,18 +184,21 @@ def mostrar_listado(conexion):
                 print("\nOpción no válida. Por favor, elija de nuevo.")
                 continue
 
-            valor = input(f"\nIngrese el valor para {criterio}: ").strip()
-            if valor.lower() == "salir":
-                break
-
-            if criterio == "Fecha":
-                where_clause = f"{criterio} = '{valor}'"
-            elif criterio == "Total":
-                where_clause = f"{criterio} = {valor}"
+            if criterio == "Buscar en toda la tabla":
+                query = "SELECT * FROM cabecera"
             else:
-                where_clause = f"{criterio} LIKE '%{valor}%'"
+                valor = input(f"Ingrese el valor para {criterio}: ").strip()
+                if valor.lower() == "salir":
+                    break
 
-            query = f"SELECT * FROM cabecera WHERE {where_clause}"
+                if criterio == "Fecha":
+                    where_clause = f"{criterio} = '{valor}'"
+                elif criterio == "Total":
+                    where_clause = f"{criterio} = {valor}"
+                else:
+                    where_clause = f"{criterio} LIKE '%{valor}%'"
+
+                query = f"SELECT * FROM cabecera WHERE {where_clause}"
 
             cursor.execute(query)
             registros = cursor.fetchall()
@@ -211,6 +216,7 @@ def mostrar_listado(conexion):
                 print("\nNo hay registros que coincidan con los criterios de búsqueda.")
             
             continuar = input("\n¿Desea realizar otra búsqueda? (s/n): ").strip().lower()
+            clear_terminal()
             if continuar != 's':
                 break
 
