@@ -66,7 +66,7 @@ def impresion(conexion):
     clear_terminal()
     check_connection(conexion)
 
-    mostrar_listado(conexion)
+    mostrar_listado_impresion(conexion)
 
     crear_impresion()
 

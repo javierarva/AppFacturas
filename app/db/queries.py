@@ -146,6 +146,26 @@ def eliminar(conexion, tabla):
         print(f"\nError al eliminar el registro: {e}")
         conexion.rollback()
 
+def mostrar_listado_impresion(conexion):
+    try:
+        cursor = conexion.cursor()
+        cursor.execute("SELECT * FROM cabecera")
+        registros = cursor.fetchall()
+        if registros:
+            headers = [i[0] for i in cursor.description]
+            df = pd.DataFrame(registros, columns=headers)
+            
+            segment_size = 8
+            
+            for start in range(0, len(headers), segment_size):
+                end = start + segment_size
+                print(f"\nMostrando columnas {start+1} a {end}:")
+                print(df.iloc[:, start:end].to_string(index=False))
+        else:
+            print("\nNo hay registros en la tabla cabecera.")
+    except Error as e:
+        print(f"\nError al leer los registros: {e}")
+
 def mostrar_listado(conexion):
     try:
         cursor = conexion.cursor()
